@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-
+using UnityEngine;
 namespace AStar.Collections.MultiDimensional
 {
     public interface IModelAGrid<T>
@@ -7,7 +7,7 @@ namespace AStar.Collections.MultiDimensional
         int Height { get; }
         int Width { get; }
         T this[int row, int column] { get; set; }
-        T this[Position position] { get; set; }
-        IEnumerable<Position> GetSuccessorPositions(Position node, bool optionsUseDiagonals = false);
+        T this[Vector2Int position] { get; set; }
+        IEnumerable<Vector2Int> GetSuccessorPositions(Vector2Int node, bool optionsUseDiagonals = false);
     }
 }

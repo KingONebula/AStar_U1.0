@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AStar.Collections.MultiDimensional;
 using AStar.Collections.PriorityQueue;
+using UnityEngine;
 
 namespace AStar.Collections.PathFinder
 {
@@ -31,7 +32,7 @@ namespace AStar.Collections.PathFinder
             {
                 for (var column = 0; column < _internalGrid.Width; column++)
                 {
-                    _internalGrid[row, column] = new PathFinderNode(position: new Position(row, column),
+                    _internalGrid[row, column] = new PathFinderNode(position: new Vector2Int(column, row),
                         g: 0,
                         h: 0,
                         parentNodePosition: default);

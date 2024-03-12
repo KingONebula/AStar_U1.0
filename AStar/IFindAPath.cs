@@ -1,5 +1,5 @@
 ﻿using System.Drawing;
-
+using UnityEngine;
 namespace AStar
 {
     public interface IFindAPath
@@ -10,7 +10,7 @@ namespace AStar
         /// <param name="start">start/current position</param>
         /// <param name="end">target position</param>
         /// <returns>An array of positions from the start to end position or empty[] if unreachable</returns>
-        Position[] FindPath(Position start, Position end);
+        Vector2Int[] FindPath(Vector2Int start, Vector2Int end);
         
         /// <summary>
         /// Determines a path between 2 positions where the point's X
@@ -19,6 +19,5 @@ namespace AStar
         /// <param name="start">start position</param>
         /// <param name="end">target position</param>
         /// <returns>An array of points from the start to end points or empty[] if unreachable</returns>
-        Point[] FindPath(Point start, Point end);
     }
 }

@@ -1,13 +1,13 @@
 using System;
-
+using UnityEngine;
 namespace AStar.Heuristics
 {
     public class Manhattan : ICalculateHeuristic
     {
-        public int Calculate(Position source, Position destination)
+        public int Calculate(Vector2Int source, Vector2Int destination)
         {
             var heuristicEstimate = 2;
-            var h = heuristicEstimate * (Math.Abs(source.Row - destination.Row) + Math.Abs(source.Column - destination.Column));
+            var h = heuristicEstimate * (Math.Abs(source.x - destination.x) + Math.Abs(source.y - destination.y));
             return h;
         }
     }

@@ -15,7 +15,8 @@ namespace AStar.Options
         public PathFinderOptions()
         {
             HeuristicFormula = HeuristicFormula.Manhattan;
-            UseDiagonals = true;
+            UseDiagonals = false;
+            PunishChangeDirection = true;
             SearchLimit = 2000;
         }
     }

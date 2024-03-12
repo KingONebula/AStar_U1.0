@@ -5,6 +5,7 @@ using System.Linq;
 using AStar.Collections.PathFinder;
 using AStar.Heuristics;
 using AStar.Options;
+using UnityEngine;
 
 namespace AStar
 {
@@ -24,15 +25,9 @@ namespace AStar
         }
         
         ///<inheritdoc/>
-        public Point[] FindPath(Point start, Point end)
-        {
-            return FindPath(new Position(start.Y, start.X), new Position(end.Y, end.X))
-                .Select(position => new Point(position.Column, position.Row))
-                .ToArray();
-        }
         
         ///<inheritdoc/>
-        public Position[] FindPath(Position start, Position end)
+        public Vector2Int[] FindPath(Vector2Int start, Vector2Int end)
         {
             var nodesVisited = 0;
             IModelAGraph<PathFinderNode> graph = new PathFinderGraph(_world.Height, _world.Width, _options.UseDiagonals);
@@ -51,13 +46,15 @@ namespace AStar
 
                 if (nodesVisited > _options.SearchLimit)
                 {
-                    return new Position[0];
+                    return new Vector2Int[0];
                 }
 
                 foreach (var successor in graph.GetSuccessors(q))
                 {
+                    
                     if (_world[successor.Position] == ClosedValue)
                     {
+                        Debug.Log(successor.Position.x + ":" + successor.Position.y + "=" + _world[successor.Position]);
                         continue;
                     }
 
@@ -83,34 +80,34 @@ namespace AStar
                 nodesVisited++;
             }
 
-            return new Position[0];
+            return new Vector2Int[0];
         }
 
-        private int CalculateModifierToG(PathFinderNode q, PathFinderNode successor, Position end)
+        private int CalculateModifierToG(PathFinderNode q, PathFinderNode successor, Vector2Int end)
         {
             if (q.Position == q.ParentNodePosition)
             {
                 return 0;
             }
             
-            var gPunishment = Math.Abs(successor.Position.Row - end.Row) + Math.Abs(successor.Position.Column - end.Column);
+            var gPunishment = Math.Abs(successor.Position.x - end.x) + Math.Abs(successor.Position.y - end.y);
             
-            var successorIsVerticallyAdjacentToQ = successor.Position.Row - q.Position.Row != 0;
+            var successorIsVerticallyAdjacentToQ = successor.Position.x - q.Position.x != 0;
 
             if (successorIsVerticallyAdjacentToQ)
             {
-                var qIsVerticallyAdjacentToParent = q.Position.Row - q.ParentNodePosition.Row == 0;
+                var qIsVerticallyAdjacentToParent = q.Position.x - q.ParentNodePosition.x == 0;
                 if (qIsVerticallyAdjacentToParent)
                 {
                     return gPunishment;
                 }
             }
 
-            var successorIsHorizontallyAdjacentToQ = successor.Position.Row - q.Position.Row != 0;
+            var successorIsHorizontallyAdjacentToQ = successor.Position.y - q.Position.y != 0;
 
             if (successorIsHorizontallyAdjacentToQ)
             {
-                var qIsHorizontallyAdjacentToParent = q.Position.Row - q.ParentNodePosition.Row == 0;
+                var qIsHorizontallyAdjacentToParent = q.Position.y - q.ParentNodePosition.y == 0;
                 if (qIsHorizontallyAdjacentToParent)
                 {
                     return gPunishment;
@@ -119,10 +116,10 @@ namespace AStar
 
             if (_options.UseDiagonals)
             {
-                var successorIsDiagonallyAdjacentToQ = (successor.Position.Column - successor.Position.Row) == (q.Position.Column - q.Position.Row);
+                var successorIsDiagonallyAdjacentToQ = (successor.Position.x - successor.Position.x) == (q.Position.y - q.Position.y);
                 if (successorIsDiagonallyAdjacentToQ)
                 {
-                    var qIsDiagonallyAdjacentToParent = (q.Position.Column - q.Position.Row) == (q.ParentNodePosition.Column - q.ParentNodePosition.Row)
+                    var qIsDiagonallyAdjacentToParent = (q.Position.y - q.Position.x) == (q.ParentNodePosition.y - q.ParentNodePosition.x)
                                                         && IsStraightLine(q.ParentNodePosition, q.Position, successor.Position);
                     if (qIsDiagonallyAdjacentToParent)
                     {
@@ -134,10 +131,10 @@ namespace AStar
             return 0;
         }
 
-        private bool IsStraightLine(Position a, Position b, Position c)
+        private bool IsStraightLine(Vector2Int a, Vector2Int b, Vector2Int c)
         {
             // area of triangle == 0
-            return (a.Column * (b.Row - c.Row) + b.Column * (c.Row - a.Row) + c.Column * (a.Row - b.Row)) / 2 == 0;
+            return (a.x * (b.y - c.y) + b.x * (c.y - a.y) + c.x * (a.y - b.y)) / 2 == 0;
         }
 
         private bool BetterPathToSuccessorFound(PathFinderNode updateSuccessor, PathFinderNode currentSuccessor)
@@ -146,9 +143,9 @@ namespace AStar
                 (currentSuccessor.HasBeenVisited && updateSuccessor.F < currentSuccessor.F);
         }
 
-        private static Position[] OrderClosedNodesAsArray(IModelAGraph<PathFinderNode> graph, PathFinderNode endNode)
+        private static Vector2Int[] OrderClosedNodesAsArray(IModelAGraph<PathFinderNode> graph, PathFinderNode endNode)
         {
-            var path = new Stack<Position>();
+            var path = new Stack<Vector2Int>();
 
             var currentNode = endNode;
 

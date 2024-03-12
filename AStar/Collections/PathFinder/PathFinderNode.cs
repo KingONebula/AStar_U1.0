@@ -1,5 +1,5 @@
 ﻿using System.Runtime.InteropServices;
-
+using UnityEngine;
 namespace AStar.Collections.PathFinder
 {
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -8,7 +8,7 @@ namespace AStar.Collections.PathFinder
         /// <summary>
         /// The position of the node
         /// </summary>
-        public Position Position { get; }
+        public Vector2Int Position { get; }
         
         /// <summary>
         /// Distance from home
@@ -23,7 +23,7 @@ namespace AStar.Collections.PathFinder
         /// <summary>
         /// This nodes parent
         /// </summary>
-        public Position ParentNodePosition { get; }
+        public Vector2Int ParentNodePosition { get; }
 
         /// <summary>
         /// Gone + Heuristic (H)
@@ -35,7 +35,7 @@ namespace AStar.Collections.PathFinder
         /// </summary>
         public bool HasBeenVisited => F > 0;
 
-        public PathFinderNode(Position position, int g, int h, Position parentNodePosition)
+        public PathFinderNode(Vector2Int position, int g, int h, Vector2Int parentNodePosition)
         {
             Position = position;
             G = g;
